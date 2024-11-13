@@ -1,0 +1,193 @@
+{
+    "message": "success",
+    "data": [
+        
+        {
+            "event_id": "event|cc83fce1-4542-4e88-9ba7-8587147586df",
+            "beneficiary_id": "beneficiary|52488c87-622c-470f-b407-9cd8bfa4a0ef",
+            "event_type": "message",
+            "event_data": {
+                "type": "document",
+                "url": "",
+                "sender": "",
+                "filename": "None",
+                "datetime": "2024-10-28 06:24:12.653446",
+                "message": "Dear Naga Vamsi1,\n\nYour Test Package 2 has been confirmed with us.\n\n\ud83d\udcc5 Date: 2024-11-01\n\ud83d\udd52 Time: 11:53:52\n\nPlease make sure to visit us 15 mins early. We look forward to assisting you on your wellness journey. If you have any queries, feel free to text/call us.\n\nBest Regards,\n*Clinestra Hospitals*",
+                "direction": "outgoing",
+                "block_id": "None",
+                "service": "whatsapp",
+                "share_with_user": "True",
+                "message_event_id": "message_event|5a9d31ec-70ef-4ec9-99b3-4ccd16ba6d7f",
+                "block_details": {},
+                "encounter_id": "encounter|253044a6-924a-4fd7-a392-7454cbbb06b6",
+                "data": {},
+                "read_receipts": {
+                    "failed": "2024-10-28 06:24:14.496806"
+                }
+            },
+            "timestamp": "2024-10-28 11:54:12 IST",
+            "actionable": true
+        },
+        {
+            "event_id": "event|cc83fce1-4542-4e88-9ba7-8587147586df",
+            "beneficiary_id": "beneficiary|52488c87-622c-470f-b407-9cd8bfa4a0ef",
+            "event_type": "message",
+            "event_data": {
+                "type": "image",
+                "url": "",
+                "sender": "",
+                "filename": "None",
+                "datetime": "2024-10-28 06:24:12.653446",
+                "message": "Dear Naga Vamsi1,\n\nYour Test Package 2 has been confirmed with us.\n\n\ud83d\udcc5 Date: 2024-11-01\n\ud83d\udd52 Time: 11:53:52\n\nPlease make sure to visit us 15 mins early. We look forward to assisting you on your wellness journey. If you have any queries, feel free to text/call us.\n\nBest Regards,\n*Clinestra Hospitals*",
+                "direction": "outgoing",
+                "block_id": "None",
+                "service": "whatsapp",
+                "share_with_user": "True",
+                "message_event_id": "message_event|5a9d31ec-70ef-4ec9-99b3-4ccd16ba6d7f",
+                "block_details": {},
+                "encounter_id": "encounter|253044a6-924a-4fd7-a392-7454cbbb06b6",
+                "data": {},
+                "read_receipts": {
+                    "failed": "2024-10-28 06:24:14.496806"
+                }
+            },
+            "timestamp": "2024-10-28 11:54:12 IST",
+            "actionable": true
+        },
+        {
+            "event_id": "event|cc83fce1-4542-4e88-9ba7-8587147586df",
+            "beneficiary_id": "beneficiary|52488c87-622c-470f-b407-9cd8bfa4a0ef",
+            "event_type": "message",
+            "event_data": {
+                "type": "document",
+                "url": "",
+                "sender": "",
+                "filename": "None",
+                "datetime": "2024-10-28 06:24:12.653446",
+                "message": "Dear Naga Vamsi1,\n\nYour Test Package 2 has been confirmed with us.\n\n\ud83d\udcc5 Date: 2024-11-01\n\ud83d\udd52 Time: 11:53:52\n\nPlease make sure to visit us 15 mins early. We look forward to assisting you on your wellness journey. If you have any queries, feel free to text/call us.\n\nBest Regards,\n*Clinestra Hospitals*",
+                "direction": "outgoing",
+                "block_id": "None",
+                "service": "whatsapp",
+                "share_with_user": "True",
+                "message_event_id": "message_event|5a9d31ec-70ef-4ec9-99b3-4ccd16ba6d7f",
+                "block_details": {},
+                "encounter_id": "encounter|253044a6-924a-4fd7-a392-7454cbbb06b6",
+                "data": {},
+                "read_receipts": {
+                    "failed": "2024-10-28 06:24:14.496806"
+                }
+            },
+            "timestamp": "2024-10-28 11:54:12 IST",
+            "actionable": true
+        },
+        {
+            "event_id": "event|cc83fce1-4542-4e88-9ba7-8587147586df",
+            "beneficiary_id": "beneficiary|52488c87-622c-470f-b407-9cd8bfa4a0ef",
+            "event_type": "message",
+            "event_data": {
+                "type": "image",
+                "url": "",
+                "sender": "",
+                "filename": "None",
+                "datetime": "2024-10-28 06:24:12.653446",
+                "message": "Dear Naga Vamsi1,\n\nYour Test Package 2 has been confirmed with us.\n\n\ud83d\udcc5 Date: 2024-11-01\n\ud83d\udd52 Time: 11:53:52\n\nPlease make sure to visit us 15 mins early. We look forward to assisting you on your wellness journey. If you have any queries, feel free to text/call us.\n\nBest Regards,\n*Clinestra Hospitals*",
+                "direction": "outgoing",
+                "block_id": "None",
+                "service": "whatsapp",
+                "share_with_user": "True",
+                "message_event_id": "message_event|5a9d31ec-70ef-4ec9-99b3-4ccd16ba6d7f",
+                "block_details": {},
+                "encounter_id": "encounter|253044a6-924a-4fd7-a392-7454cbbb06b6",
+                "data": {},
+                "read_receipts": {
+                    "failed": "2024-10-28 06:24:14.496806"
+                }
+            },
+            "timestamp": "2024-10-28 11:54:12 IST",
+            "actionable": true
+        },
+        {
+            "event_id": "event|cc83fce1-4542-4e88-9ba7-8587147586df",
+            "beneficiary_id": "beneficiary|52488c87-622c-470f-b407-9cd8bfa4a0ef",
+            "event_type": "message",
+            "event_data": {
+                "type": "audio",
+                "url": "",
+                "sender": "",
+                "filename": "None",
+                "datetime": "2024-10-28 06:24:12.653446",
+                "message": "Dear Naga Vamsi1,\n\nYour Test Package 2 has been confirmed with us.\n\n\ud83d\udcc5 Date: 2024-11-01\n\ud83d\udd52 Time: 11:53:52\n\nPlease make sure to visit us 15 mins early. We look forward to assisting you on your wellness journey. If you have any queries, feel free to text/call us.\n\nBest Regards,\n*Clinestra Hospitals*",
+                "direction": "outgoing",
+                "block_id": "None",
+                "service": "whatsapp",
+                "share_with_user": "True",
+                "message_event_id": "message_event|5a9d31ec-70ef-4ec9-99b3-4ccd16ba6d7f",
+                "block_details": {},
+                "encounter_id": "encounter|253044a6-924a-4fd7-a392-7454cbbb06b6",
+                "data": {},
+                "read_receipts": {
+                    "failed": "2024-10-28 06:24:14.496806"
+                }
+            },
+            "timestamp": "2024-10-28 11:54:12 IST",
+            "actionable": true
+        },
+        {
+            "event_id": "event|cc83fce1-4542-4e88-9ba7-8587147586df",
+            "beneficiary_id": "beneficiary|52488c87-622c-470f-b407-9cd8bfa4a0ef",
+            "event_type": "message",
+            "event_data": {
+                "type": "text",
+                "url": "",
+                "sender": "",
+                "filename": "None",
+                "datetime": "2024-10-28 06:24:12.653446",
+                "message": "Dear Naga Vamsi1,\n\nYour Test Package 2 has been confirmed with us.\n\n\ud83d\udcc5 Date: 2024-11-01\n\ud83d\udd52 Time: 11:53:52\n\nPlease make sure to visit us 15 mins early. We look forward to assisting you on your wellness journey. If you have any queries, feel free to text/call us.\n\nBest Regards,\n*Clinestra Hospitals*",
+                
+                "block_id": "None",
+                "service": "whatsapp",
+                "share_with_user": "True",
+                "message_event_id": "message_event|5a9d31ec-70ef-4ec9-99b3-4ccd16ba6d7f",
+                "block_details": {},
+                "encounter_id": "encounter|253044a6-924a-4fd7-a392-7454cbbb06b6",
+                "data": {},
+                "read_receipts": {
+                    "failed": "2024-10-28 06:24:14.496806"
+                }
+              
+            },
+              "direction": "incoming",
+            "timestamp": "2024-10-28 11:54:12 IST",
+            "actionable": true
+        },
+        {
+            "event_id": "event|cc83fce1-4542-4e88-9ba7-8587147586df",
+            "beneficiary_id": "beneficiary|52488c87-622c-470f-b407-9cd8bfa4a0ef",
+            "event_type": "message",
+            "event_data": {
+                "type": "text",
+                "url": "",
+                "sender": "",
+                "filename": "None",
+                "datetime": "2024-10-28 06:24:12.653446",
+                "message": "Dear Naga Vamsi1,\n\nYour Test Package 2 has been confirmed with us.\n\n\ud83d\udcc5 Date: 2024-11-01\n\ud83d\udd52 Time: 11:53:52\n\nPlease make sure to visit us 15 mins early. We look forward to assisting you on your wellness journey. If you have any queries, feel free to text/call us.\n\nBest Regards,\n*Clinestra Hospitals*",
+               
+                "block_id": "None",
+                "service": "whatsapp",
+                "share_with_user": "True",
+                "message_event_id": "message_event|5a9d31ec-70ef-4ec9-99b3-4ccd16ba6d7f",
+                "block_details": {},
+                "encounter_id": "encounter|253044a6-924a-4fd7-a392-7454cbbb06b6",
+                "data": {},
+                "read_receipts": {
+                    "failed": "2024-10-28 06:24:14.496806"
+                }
+                
+            },
+            "direction": "outgoing",
+            "timestamp": "2024-10-28 11:54:12 IST",
+            "actionable": true
+        }
+
+    ]
+} 
