@@ -5,6 +5,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import First from "./first"
+import Notification from "./Notification"
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -43,5 +44,6 @@ export default function TabLayout() {
     //   />
     // </Tabs>
     <First/>
+    // <Notification/>
   );
 }

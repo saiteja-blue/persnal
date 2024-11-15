@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image,Text } from 'react-native';
 
 const ImageFile = (props) => {
   return (
     <View
       style={{
         
-        padding: 10,
+        padding: 3,
         borderRadius: 10,
+        // border:"1px solid green"
        
       }}
     >
@@ -16,13 +17,17 @@ const ImageFile = (props) => {
           uri: props.url
         }}
         style={{
-          width: 200,
+          // width: 200,
+          minWidth:200,
           height: 200,
-          resizeMode: 'contain',
+          // resizeMode: 'contain',
        
           borderRadius: 10,
         }}
+        
       />
+
+      {props.message&&<Text style={{paddingVertical:10,paddingHorizontal:5}}>{props.message}</Text>}
     </View>
   );
 };

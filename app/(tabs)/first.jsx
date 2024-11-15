@@ -20,7 +20,9 @@ import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import axios from 'axios';
+import ImageScreen from '../../components/ImageScreen';
 
+import { token } from '../../constants/constant';
 
 
 
@@ -42,6 +44,9 @@ const App = () => {
    const [currentMessageSocketData,SetCurrentMessageSocketData]=useState([])
    const [events,setEvents]=useState([])
    const [quickResponse,setQuickResponse]=useState([])
+   const [media,setMedia]=useState(null)
+   const [results,setResults]=useState(null)
+
 console.log(quickResponse,"quickResponse")
 const [ws, setWs] = useState(null);
 
@@ -52,6 +57,7 @@ const [scrollDown, setScrollDown] = useState(false)
 const [eventPage, setEventPage] = useState(2);
 const eventContainerRef = useRef(null);
 const [prevEventPageLength, setPrevEventPageLength] = useState(5);
+const [image,SetIMage]=useState(false)
  
 
 console.log(currentMessageSocketData,"currentMessageSocketData")
@@ -62,8 +68,14 @@ const handleImageSelection = async () => {
     aspect: [4, 3],
     quality: 1,
   });
-
+  if(!result.canceled){
+    setMedia("image")
+    setResults(result)
+    return
+  }
+  
   console.log(result,"hjkh");
+
 
   if (!result.canceled) {
     const fileUri = result.assets[0].uri;
@@ -97,8 +109,8 @@ const handleImageSelection = async () => {
       // Send FormData to the backend with Axios
       const response = await axios.post('http://127.0.0.1:8000/wa-engage/send_app_message', formData, {
         headers: {
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDE0OTE0LCJpYXQiOjE3MzEzODcwNDcsImp0aSI6IjEwZjdjYTZmYWQxZjRiY2JiOWJhZWU4ZTczMmFkMWVjIiwidXNlcl9pZCI6ImFkbWluIiwibmFtZSI6IkFkbWluIEFkbWluIiwiZW1haWwiOiJhZG1pbkBjbGluZXN0cmEuY29tIiwic2l0ZSI6ImV4YW1wbGUuY29tIiwiYWN0dWFsX3VzZXJfaWQiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiJ9.y78ClDGdbuT7W_kGCsK1Am692SzwtEeRbYe8OrtfNQA`,
-          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNDkwODI2LCJpYXQiOjE3MzEzODcwNDcsImp0aSI6ImVmMDM4ZjNhZjI1YzQ3OGY4OWRmMTQ4NTkzY2Q2NjBhIiwidXNlcl9pZCI6ImFkbWluIiwibmFtZSI6IkFkbWluIEFkbWluIiwiZW1haWwiOiJhZG1pbkBjbGluZXN0cmEuY29tIiwic2l0ZSI6ImV4YW1wbGUuY29tIiwiYWN0dWFsX3VzZXJfaWQiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiJ9.MIp22WOfaXU_uUCLbMAwnDz2UQ1kp1q2TVqE6fgzM9g`,
+          // 'Content-Type': 'multipart/form-data',
         },
       });
 
@@ -119,6 +131,13 @@ const handleImageSelection = async () => {
       type: ['application/pdf','application/doc','application/docx'],
         copyToCacheDirectory: false, 
     });
+
+    if(!result.canceled){
+      setMedia("document")
+      setResults(result)
+      return
+    }
+
     const data = {
       // message: `${currentMessage}`,
       file_type: 'pdf',
@@ -154,7 +173,7 @@ const handleImageSelection = async () => {
       // Send FormData to the backend with Axios
       const response = await axios.post('http://127.0.0.1:8000/wa-engage/send_app_message', formData,{
         headers: {
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMzk0NjA4LCJpYXQiOjE3MzEzMDExMjcsImp0aSI6IjJlODZhOGJmNjUwYzRhNTY4NzI5MjI0NzIwOTBjZTJlIiwidXNlcl9pZCI6ImFkbWluIiwibmFtZSI6IkFkbWluIEFkbWluIiwiZW1haWwiOiJhZG1pbkBjbGluZXN0cmEuY29tIiwic2l0ZSI6ImV4YW1wbGUuY29tIiwiYWN0dWFsX3VzZXJfaWQiOiJhZG1pbiJ9.31AaBJIQGZ3JJ8WS-3GxXLDVNQHGofDZ69hGDgxsW6k`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         }});
         setShowDropdown(false)
@@ -231,6 +250,7 @@ const handleAudioSelection = async () => {
 
 const handleSubmitMessage = async (currentMessage) => {
   setQuickResponse([])
+  const formData = new FormData();
   const data = {
     message: `${currentMessage}`,
     file_type: 'text',
@@ -239,12 +259,18 @@ const handleSubmitMessage = async (currentMessage) => {
     encounter_id: 'all',
   };
 
+  formData.append('message', data.message); 
+  formData.append('file_type', data.file_type);
+  formData.append('beneficiary_number',data.beneficiary_number)
+  formData.append('encounter_id',data.encounter_id)
+  formData.append('beneficiary_id',data.beneficiary_id)
+
+
+  const headers = { 'Accept': 'application/json, text/plain, */*',    'Authorization': `Bearer ${token}` };
+
   try {
-    const response = await axios.post('http://127.0.0.1:8000/wa-engage/send_app_message', data,{
-      headers: {
-        'Authorization':  `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxMzk0NjA4LCJpYXQiOjE3MzEzMDExMjcsImp0aSI6IjJlODZhOGJmNjUwYzRhNTY4NzI5MjI0NzIwOTBjZTJlIiwidXNlcl9pZCI6ImFkbWluIiwibmFtZSI6IkFkbWluIEFkbWluIiwiZW1haWwiOiJhZG1pbkBjbGluZXN0cmEuY29tIiwic2l0ZSI6ImV4YW1wbGUuY29tIiwiYWN0dWFsX3VzZXJfaWQiOiJhZG1pbiJ9.31AaBJIQGZ3JJ8WS-3GxXLDVNQHGofDZ69hGDgxsW6k`,
-        'Content-Type': 'application/json'
-      }});
+    const response = await axios.post('http://127.0.0.1:8000/wa-engage/send_app_message', formData,{
+      headers: headers});
     console.log('Response:', response.data);
     setMessage("")
   } catch (error) {
@@ -343,7 +369,10 @@ useEffect(() => {
   // setLoading(true);
   console.log("hello")
   axios.get(
-    `http://127.0.0.1:8000/beneficiary_base/beneficiary_events_data?beneficiary_id=${"beneficiary|27e74ec8-f3a9-4d67-9b36-25fedc76bf50"}&encounter_id=${"all"}&page=${1}&limit=1000`, 
+    `https://clinestra-dev-backend.azurewebsites.net/beneficiary_base/beneficiary_events_data?beneficiary_id=${"beneficiary|27e74ec8-f3a9-4d67-9b36-25fedc76bf50"}&encounter_id=${"all"}&page=${1}&limit=1000`,{  headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },} 
 
   ).then((res) => {
    
@@ -360,7 +389,8 @@ useEffect(() => {
   })
 
   return () => {
-    source.cancel()
+    // source.cancel()
+    console.log("something is happening")
   }
 }, []);
 
@@ -396,11 +426,12 @@ const sortedGroupedDataArray = groupedDataArray.map(({ date, events }) => ({
 console.log(sortedGroupedDataArray,"sprt")
 
  useEffect(() => {
+  
   // Scroll to the bottom when groupedDataArray changes (e.g., when loading new messages)
   if (eventPage == 1 || eventPage == 2) {
     eventContainerRef.current?.scrollToEnd({ animated: false });
   }
-}, [groupedDataArray]);
+}, [groupedDataArray,media]);
 
 const getBeneficiaryEventsData = async (eventPage) => {
   try {
@@ -455,7 +486,8 @@ console.log(events,"ssssss")
 
 
   return (
-    
+    <View  style={{ flex: 1,}}>
+    {media?<ImageScreen results={results} media={media} setMedia={setMedia} setShowDropdown={setShowDropdown} setResults={setResults}/>:<View  style={{ flex: 1,}}>
     <TouchableWithoutFeedback onPress={handleOutsidePress}>
          {/* Header */}
        
@@ -494,8 +526,8 @@ console.log(events,"ssssss")
 
 return <React.Fragment key={index}>
 {event.actionable === false ? (
-  <View style={{ marginTop: 20, alignItems: 'center', height: 40 }}>
-    <View style={{ margin: 12, flexDirection: 'row', justifyContent: 'center', position: 'relative' }}>
+  <View style={{ marginTop: 20, alignItems: 'center',}}>
+    <View style={{  flexDirection: 'row', justifyContent: 'center', position: 'relative' }}>
       {/* <StatusNotifyPill
         index={index}
         context={event.is_context_dynamic ? event.event_data.message.replace(/_/g, ' ') : event.event_type.replace(/_/g, ' ')}
@@ -523,7 +555,7 @@ return <React.Fragment key={index}>
     </View>
   </View>
 ):
-<View style={{ marginTop: 20 }}>
+<View style={{ marginBottom:15 }}>
 <BaseBubble key={index} {...event}/>
 </View>
 
@@ -565,7 +597,7 @@ return <React.Fragment key={index}>
       <View style={{ marginTop: 20, borderRadius: 10, borderWidth: 1, borderColor: '#E0E0E0', backgroundColor: '#c9d4f1', paddingHorizontal: 10 ,paddingVertical: 15,display:"flex",flexDirection:"row",justifyContent:"space-between",gap:10,position:"relative"}}>
       {showDropdown && (
         <View style={{
-          position: 'absolute', bottom: height * 0.07, left: 10, backgroundColor: '#fff',
+          position: 'absolute', bottom: height * 0.08, left: 10, backgroundColor: '#fff',
           borderRadius: 5, paddingVertical: 10,paddingHorizontal: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.3, shadowRadius: 5, elevation: 5,  border:"1px solid #808080",
         }} ref={MediaPopUp}>
@@ -591,17 +623,22 @@ return <React.Fragment key={index}>
         </View>
       )}
       <TouchableOpacity onPress={toggleDropdown}>
-         {!showDropdown? <AntDesign name='plus' size={24} color="#000" />:<Entypo name='cross' size={25} color="#000"/>}
+         {!showDropdown? <AntDesign name='plus' size={24} color="#000" />:<Ionicons name='close' size={25} color="#000"/>}
         </TouchableOpacity>
         <TextInput placeholder="Ask Cura..." style={{ fontSize: 14, color: '#000',flex: 1,borderWidth: 0,outline: 'none'}}  value={message}
         onChangeText={setMessage}/>
         
-          <Icon onPress={()=>handleSubmitMessage(message)} name={true ? 'send' : 'play-arrow'} size={24} color="#405E93" />
+          <Icon onPress={()=>handleSubmitMessage(message)} name={ message.trim().length>0? 'send' : 'keyboard-voice'} size={25} color="#405E93" />
            
       </View>
       </View>
     </View>
     </TouchableWithoutFeedback>
+    </View>
+    
+    }
+    </View>
+    
   );
 };
 

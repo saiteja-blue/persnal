@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
   //  color:"black",
     maxWidth: "70%", 
     overflow: 'hidden', 
-    padding: 10, 
+    // padding: 10, 
     lineHeight: 24, 
-    marginBottom:10,
+    // marginBottom:10,
     
   },
   eventCompIncoming:{
@@ -62,9 +62,9 @@ const styles = StyleSheet.create({
     color:"white",
     maxWidth: "70%", 
     overflow: 'hidden', 
-    padding: 10, 
+    // padding: 10, 
     lineHeight: 24, 
-    marginBottom:10,
+    // marginBottom:10,
   },
   incoming:{
     display:"flex",
