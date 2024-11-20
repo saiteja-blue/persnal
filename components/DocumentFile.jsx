@@ -41,7 +41,7 @@ const DocumentFile = (props) => {
   // </TouchableOpacity>
 
   <TouchableOpacity
-  style={{ flexDirection: 'column',padding:3,}} onPress={downloadDocument}>
+  style={{ flexDirection: 'column',padding:3,width:'100%'}} onPress={downloadDocument}>
   <View
     style={{
       backgroundColor: 'white',
@@ -58,19 +58,19 @@ const DocumentFile = (props) => {
     
    
   </View>
-  <View>
+  <View style={{paddingHorizontal:10,paddingTop:10}}>
       <Text
         style={{
-          fontSize: 16,
-          textAlign: 'center',
+          fontSize: 14,
+          
           flexWrap: 'wrap',
           color:"gray"
         }}
       
       >
-        {truncateString(props.filename,30)}
+        {truncateString(props.filename,20)}
       </Text>
-      <Text style={{ fontSize: 14,textAlign: 'center',  color:"gray" }}>Size: 1.2 MB</Text>
+      <Text style={{ fontSize: 12,  color:"gray" }}>Size: 1.2 MB</Text>
     </View>
 
   {props.message&&<Text style={{paddingVertical:10,paddingHorizontal:5}}>{props.message}</Text>}

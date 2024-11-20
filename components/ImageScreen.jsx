@@ -114,7 +114,7 @@ const ImagePickerWithTextInput = ({media,results,setMedia,setShowDropdown,setRes
     
         try {
           // Send FormData to the backend with Axios
-          const response = await axios.post('http://127.0.0.1:8000/wa-engage/send_app_message', formData, {
+          const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL_LOCALHOST}/wa-engage/send_app_message`, formData, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'multipart/form-data',

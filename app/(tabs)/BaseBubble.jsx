@@ -8,10 +8,15 @@ import Message from "../../components/Message"
 
 const BaseBubble = (props) => {
     // console.log(props)
+
+    const bubbleClass =
+    props.event_data?.type === "image" || props.event_data?.type === "document"
+      ? "halfWidth"
+      : "";
   return (
     //props.direction == 'outgoing'?styles.outgoing:styles.incoming
     <View style={props.event_data.direction == 'outgoing'?styles.outgoing:styles.incoming}>
-      <View style={props.event_data.direction == 'outgoing'?styles.eventCompOutgoing:styles.eventCompIncoming}>
+      <View style={[props.event_data.direction == 'outgoing'?styles.eventCompOutgoing:styles.eventCompIncoming, styles[bubbleClass]] }>
       {props.event_data?.type === "image" ? (
         <IMageFile {...props.event_data} />
       ) : props.event_data?.type === "document" ? (
@@ -75,7 +80,10 @@ const styles = StyleSheet.create({
     display:"flex",
     flexDirection:"row",
     justifyContent:"flex-end"
-  }
+  },
+  halfWidth: {
+    width: "60%", // Added this class for conditional width
+  },
   
 });
 

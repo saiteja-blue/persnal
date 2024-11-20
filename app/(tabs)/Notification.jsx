@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet,ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { token } from '../../constants/constant';
+import axios from 'axios';
 
 const Data=[
     {
@@ -59,17 +61,19 @@ const Data=[
   
 
 const NotificationScreen = () => {
+    const URl=process.env.EXPO_PUBLIC_API_URL_Dev
+console.log(URl)
     const [notificationData, setNotificationData] = useState({
         loading: true,
-        // data: [],
-        data:Data,
+        data: [],
+        // data:Data,
         error: null,
       });
 
 
       const truncateString = (str, length) => {
-        if (str.length <= length) return str;
-        return str.slice(0, length) + '...';
+        if (str?.length <= length) return str;
+        return str?.slice(0, length) + '...';
       };
       
 
@@ -84,7 +88,10 @@ const NotificationScreen = () => {
           }));
   
          
-          const response = await axios.get('http://your-api-url.com/notifications');
+          const response = await axios.get(`${process.env.EXPO_PUBLIC_API_URL_LOCALHOST}/request_handling/user_notifications/?beneficiary_id=beneficiary%7C18380335-3979-45c9-b6fb-4f5d1e0f2def`,{  headers: {
+            'Authorization': `Bearer ${token}`,
+            // 'Content-Type': 'multipart/form-data',
+          },} );
   
 
           setNotificationData({
@@ -103,10 +110,70 @@ const NotificationScreen = () => {
       };
   
    
-    //   fetchNotifications();
+      fetchNotifications();
     }, []);
 
 
+    const groupedDataArray = useMemo(() => {
+        const groupedDataMap = new Map();
+    
+        // Group events by date
+        notificationData.data.forEach((item) => {
+          const date = item.created_at.split(" ")[0]; // Extract the date part
+          if (!groupedDataMap.has(date)) {
+            groupedDataMap.set(date, []);
+          }
+          groupedDataMap.get(date).push(item);
+        });
+    
+        // Convert Map to array and sort events by timestamp within each date
+        return Array.from(groupedDataMap, ([date, notificationData]) => ({
+          date,
+          notificationData,
+        }));
+      }, [notificationData]);
+
+      const sortedGroupedDataArray = groupedDataArray.map(({ date, notificationData }) => ({
+        date,
+        notificationData: notificationData.slice().sort((a, b) => {
+          const dateA = new Date(a.created_at);
+          const dateB = new Date(b.created_at);
+          return dateA - dateB;
+        }),
+      }));
+
+
+
+console.log(sortedGroupedDataArray,"dfsk")
+
+const formatDate = (inputDate) => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+  
+    const input = new Date(inputDate);
+  
+    const isSameDay = (date1, date2) => 
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate();
+  
+    if (isSameDay(input, today)) {
+      return "Today";
+    } else if (isSameDay(input, yesterday)) {
+      return "Yesterday";
+    } else {
+      return inputDate;
+    }
+  };
+
+  if (notificationData.loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#125B73" />
+      </View>
+    );
+  }
 
 
   return (
@@ -121,24 +188,27 @@ const NotificationScreen = () => {
       <View style={styles.contentWrapper}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Today (5)</Text>
-
-            {notificationData.data.map((notification, index) => (
-              <View key={index} style={styles.notificationCard}>
+            {sortedGroupedDataArray.map((notification, index) => (
+                <View key={index} >
+                <Text style={styles.sectionTitle}> {`${formatDate(notification.date)} (${notification.notificationData.length})`}</Text>
+               {notification.notificationData.map((notification,index)=>{
+                return <View key={index}  style={styles.notificationCard}>
                 <View style={styles.notificationInfo}>
                   <AntDesign name="clockcircleo" size={20} color="black" />
                   <View style={styles.notificationTextContainer}>
-                    <Text style={styles.notificationTitle}>{notification.name}</Text>
+                    <Text style={styles.notificationTitle}>{notification.title}</Text>
                     <Text style={styles.notificationSubtitle}>
-                      {truncateString(notification.supportingText,35)}
+                      {truncateString(notification.description,35)}
                     </Text>
                   </View>
                 </View>
-                <Text style={styles.notificationTime}>{notification.time}</Text>
+                <Text style={styles.notificationTime}>{notification.created_at.split(" ")[1].slice(0, 5)}</Text>
+              </View>
+ } )}
               </View>
             ))}
 
-            <View style={styles.notificationCard}>
+            {/* <View style={styles.notificationCard}>
               <View style={styles.notificationInfo}>
                 <FontAwesome name="glass" size={24} color="#4A4A4A" />
                 <View style={styles.notificationTextContainer}>
@@ -151,10 +221,10 @@ const NotificationScreen = () => {
               <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>Drink water</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
 
-          <View style={[styles.section, styles.sectionBottom]}>
+          {/* <View style={[styles.section, styles.sectionBottom]}>
             <Text style={styles.sectionTitle}>Yesterday (5)</Text>
 
             <View style={styles.notificationCard}>
@@ -171,7 +241,7 @@ const NotificationScreen = () => {
                 <Text style={styles.buttonText}>Drink water</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
         </ScrollView>
       </View>
     </View>
@@ -263,6 +333,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#007AFF',
     fontSize: 14,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#DBE9FD',
   },
 });
 

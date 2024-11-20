@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView,Image,StyleSheet, Button ,Dimensions,TouchableWithoutFeedback} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView,Image,StyleSheet, Button ,Dimensions,TouchableWithoutFeedback,ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import FontAwesomeIcon5 from 'react-native-vector-icons/FontAwesome5';
@@ -23,7 +23,7 @@ import axios from 'axios';
 import ImageScreen from '../../components/ImageScreen';
 
 import { token } from '../../constants/constant';
-
+import QuickResponse from "./QuickResponse"
 
 
 
@@ -46,6 +46,7 @@ const App = () => {
    const [quickResponse,setQuickResponse]=useState([])
    const [media,setMedia]=useState(null)
    const [results,setResults]=useState(null)
+   const [loading, setLoading] = useState(false);
 
 console.log(quickResponse,"quickResponse")
 const [ws, setWs] = useState(null);
@@ -61,6 +62,8 @@ const [image,SetIMage]=useState(false)
  
 
 console.log(currentMessageSocketData,"currentMessageSocketData")
+
+
    
 const handleImageSelection = async () => {
   let result = await ImagePicker.launchImageLibraryAsync({
@@ -247,6 +250,37 @@ const handleAudioSelection = async () => {
   }
 };
 
+const dropDownMedia = [
+  {
+    name: "Upload Image",
+    action: handleImageSelection,
+    size: 17,
+    iconFrom:FontAwesomeIcon,
+    icon: "image" // Add the FontAwesome icon directly
+  },
+  {
+    name: "Upload Document",
+    action: handleDocumentSelection,
+    size: 20,
+    iconFrom:AntDesign,
+    icon: "addfile" // Add the FontAwesome icon directly
+  },
+  // {
+  //   name: "Upload Video",
+  //   action: handleVideoSelection,
+  //   size: 20,
+  //   iconFrom:Feather,
+  //   icon: "video" // Add the FontAwesome icon directly
+  // },
+  // {
+  //   name: "Upload Audio",
+  //   action: handleAudioSelection,
+  //   size: 20,
+  //   iconFrom:FontAwesomeIcon5,
+  //   icon: "file-audio" // Add the FontAwesome icon directly
+  // }
+];
+
 
 const handleSubmitMessage = async (currentMessage) => {
   setQuickResponse([])
@@ -269,7 +303,7 @@ const handleSubmitMessage = async (currentMessage) => {
   const headers = { 'Accept': 'application/json, text/plain, */*',    'Authorization': `Bearer ${token}` };
 
   try {
-    const response = await axios.post('http://127.0.0.1:8000/wa-engage/send_app_message', formData,{
+    const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/wa-engage/send_app_message`, formData,{
       headers: headers});
     console.log('Response:', response.data);
     setMessage("")
@@ -297,7 +331,7 @@ useEffect(() => {
       //     `ws://localhost:8001/sockets/ws/events/${site}/${client_id}`);
       const site="example.com"
       const pj_sockets = new WebSocket(
-          `ws://localhost:8000/sockets/ws/events/${site}/${client_id}`);
+          `${process.env.EXPO_PUBLIC_SOCKET_URL}/sockets/ws/events/${site}/${client_id}`);
       if (pj_sockets.readyState === WebSocket.OPEN) {
           return;
       }
@@ -367,18 +401,21 @@ const checkScrollPosition = () => {
 useEffect(() => {
   // const source = axios.CancelToken.source()
   // setLoading(true);
-  console.log("hello")
+  setLoading(true);
+  
   axios.get(
-    `https://clinestra-dev-backend.azurewebsites.net/beneficiary_base/beneficiary_events_data?beneficiary_id=${"beneficiary|27e74ec8-f3a9-4d67-9b36-25fedc76bf50"}&encounter_id=${"all"}&page=${1}&limit=1000`,{  headers: {
+    `${process.env.EXPO_PUBLIC_API_URL}/beneficiary_base/beneficiary_events_data?beneficiary_id=${"beneficiary|27e74ec8-f3a9-4d67-9b36-25fedc76bf50"}&encounter_id=${"all"}&page=${1}&limit=10`,{  headers: {
       'Authorization': `Bearer ${token}`,
-      'Content-Type': 'multipart/form-data',
+      // 'Content-Type': 'multipart/form-data',
+     " Content-Type": "application/json"
+
     },} 
 
   ).then((res) => {
    
     console.log(res.data.data,"dataaaa")
     setEvents(res.data.data)
-    // setLoading(false)
+    setLoading(false)
     // checkScrollPosition()
   }).catch((err) => {
     if (axios.isCancel(err)) {
@@ -386,6 +423,7 @@ useEffect(() => {
     } else {
       //  console.error('events error',err)
     }
+    setLoading(false); 
   })
 
   return () => {
@@ -398,7 +436,7 @@ useEffect(() => {
 const groupedDataArray = useMemo(() => {
   const groupedDataMap = new Map();
 
-  events.forEach((item) => {
+  events?.forEach((item) => {
     const date = item.timestamp.split(" ")[0];
 
     if (!groupedDataMap.has(date)) {
@@ -436,7 +474,7 @@ console.log(sortedGroupedDataArray,"sprt")
 const getBeneficiaryEventsData = async (eventPage) => {
   try {
     const res = await axios.get(
-      `http://127.0.0.1:8000/beneficiary_base/beneficiary_events_data?beneficiary_id=${"beneficiary|7ac04d9b-7040-48a0-ac2c-ba1c2ddcd524"}&encounter_id=${"all"}&page=${eventPage}&limit=20`, 
+      `${process.env.EXPO_PUBLIC_API_URL_LOCALHOST}/beneficiary_base/beneficiary_events_data?beneficiary_id=${"beneficiary|7ac04d9b-7040-48a0-ac2c-ba1c2ddcd524"}&encounter_id=${"all"}&page=${eventPage}&limit=20`, 
     );
     return res.data.data;
   } catch (error) {
@@ -485,6 +523,7 @@ const handleScroll = (event) => {
 console.log(events,"ssssss")
 
 
+
   return (
     <View  style={{ flex: 1,}}>
     {media?<ImageScreen results={results} media={media} setMedia={setMedia} setShowDropdown={setShowDropdown} setResults={setResults}/>:<View  style={{ flex: 1,}}>
@@ -503,7 +542,9 @@ console.log(events,"ssssss")
       
 <View style={{paddingHorizontal:20,paddingBottom:20,flex: 1,}}>
       {/* Scrollable Content */}
-      <ScrollView ref={eventContainerRef}   onScroll={handleScroll}   >
+      {loading?     <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+        </View>:<ScrollView ref={eventContainerRef}   onScroll={handleScroll}   >
       
 
       
@@ -571,22 +612,15 @@ return <React.Fragment key={index}>
           })} */}
         </View>
 
-      </ScrollView>
+      </ScrollView>}
 
       {/* Upload Section */}
       {/* <ScrollView horizontal  contentContainer 
       showsHorizontalScrollIndicator={false} > */}
      
      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ flexShrink: 0 }}>
-     {quickResponse.length>0 &&
-      quickResponse.map((quickResponse,index)=>{
-        return <View key={index}>
-           <TouchableOpacity onPress={()=>handleSubmitMessage(quickResponse)} style={{ flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: "#d9d9d9", marginRight: 5, borderRadius: 5 }}>
-          {/* <FontAwesomeIcon name="video-camera" size={24} color="#000" /> */}
-          <Text style={{ fontSize: 12, color: '#000', marginLeft: 3 }}>{quickResponse}</Text>
-        </TouchableOpacity>
-        </View>
-      })
+     {quickResponse.length>0 && <QuickResponse quickResponse={quickResponse} handleSubmitMessage={handleSubmitMessage}/>
+      
      }
     </ScrollView>
       
@@ -601,25 +635,19 @@ return <React.Fragment key={index}>
           borderRadius: 5, paddingVertical: 10,paddingHorizontal: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.3, shadowRadius: 5, elevation: 5,  border:"1px solid #808080",
         }} ref={MediaPopUp}>
-          <TouchableOpacity onPress={handleImageSelection} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5,columnGap:10 }}>
-            <FontAwesomeIcon name="image" size={17} color="#125873" style={{width:20}} />
-            <Text style={{ fontSize: 14, color: '#000', }}>Upload Image</Text>
-          </TouchableOpacity>
+          {
+            dropDownMedia.map((media,index)=>{
+              const IconComponent = media.iconFrom;
+              console.log(IconComponent,"IconComponent")
+              return <TouchableOpacity key={index} onPress={media.action} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5,columnGap:10 }}>
+              <IconComponent name={media.icon} size={media.size} color="#125873" style={{width:20}} />
+              <Text style={{ fontSize: 14, color: '#000', }}>{media.name}</Text>
+            </TouchableOpacity>
+            })
+          }
+          
 
-          <TouchableOpacity onPress={handleDocumentSelection} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5,columnGap:10  }}>
-            <AntDesign name="addfile" size={20} color="#125873" style={{width:20}} />
-            <Text style={{ fontSize: 14, color: '#000',}}>Upload Document</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleVideoSelection} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5,columnGap:10  }}>
-            <Feather name="video" size={20} color="#125873" style={{width:20}}/>
-            <Text style={{ fontSize: 14, color: '#000', }}>Upload Video</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleAudioSelection} style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 5,columnGap:10  }}>
-            <FontAwesomeIcon5 name="file-audio" size={20} color="#125873"  style={{width:20}} />
-            <Text style={{ fontSize: 14, color: '#000',  }}>Upload Audio</Text>
-          </TouchableOpacity>
+          
         </View>
       )}
       <TouchableOpacity onPress={toggleDropdown}>
@@ -649,7 +677,7 @@ display:"flex",
 flexDirection:"column",
 alignItems:"flex-end"
 },
-  
+loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
 
 export default App;
