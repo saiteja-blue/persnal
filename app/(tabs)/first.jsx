@@ -283,6 +283,7 @@ const dropDownMedia = [
 
 
 const handleSubmitMessage = async (currentMessage) => {
+  if(!(currentMessage.trim().length>0)) return 
   setQuickResponse([])
   const formData = new FormData();
   const data = {
@@ -300,7 +301,7 @@ const handleSubmitMessage = async (currentMessage) => {
   formData.append('beneficiary_id',data.beneficiary_id)
 
 
-  const headers = { 'Accept': 'application/json, text/plain, */*',    'Authorization': `Bearer ${token}` };
+  const headers = {"Content-Type": "multipart/form-data", 'Accept': 'application/json, text/plain, */*',    'Authorization': `Bearer ${token}`,  'ngrok-skip-browser-warning': 'skip-browser-warning', };
 
   try {
     const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL}/wa-engage/send_app_message`, formData,{
@@ -406,8 +407,10 @@ useEffect(() => {
   axios.get(
     `${process.env.EXPO_PUBLIC_API_URL}/beneficiary_base/beneficiary_events_data?beneficiary_id=${"beneficiary|27e74ec8-f3a9-4d67-9b36-25fedc76bf50"}&encounter_id=${"all"}&page=${1}&limit=10`,{  headers: {
       'Authorization': `Bearer ${token}`,
-      // 'Content-Type': 'multipart/form-data',
-     " Content-Type": "application/json"
+      'Content-Type': 'multipart/form-data',
+    //  " Content-Type": "application/json",
+     'ngrok-skip-browser-warning': 'skip-browser-warning',
+     
 
     },} 
 
@@ -463,13 +466,15 @@ const sortedGroupedDataArray = groupedDataArray.map(({ date, events }) => ({
 
 console.log(sortedGroupedDataArray,"sprt")
 
- useEffect(() => {
+//  useEffect(() => {
   
-  // Scroll to the bottom when groupedDataArray changes (e.g., when loading new messages)
-  if (eventPage == 1 || eventPage == 2) {
-    eventContainerRef.current?.scrollToEnd({ animated: false });
-  }
-}, [groupedDataArray,media]);
+//   // Scroll to the bottom when groupedDataArray changes (e.g., when loading new messages)
+//   if (eventPage == 1 || eventPage == 2) {
+//     
+//       eventContainerRef.current?.scrollToEnd({ animated: true });
+//   
+//   }
+// }, [groupedDataArray,media]);
 
 const getBeneficiaryEventsData = async (eventPage) => {
   try {
@@ -544,7 +549,11 @@ console.log(events,"ssssss")
       {/* Scrollable Content */}
       {loading?     <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="#007AFF" />
-        </View>:<ScrollView ref={eventContainerRef}   onScroll={handleScroll}   >
+        </View>:<ScrollView ref={eventContainerRef} onScroll={handleScroll} onContentSizeChange={() => {
+    
+        eventContainerRef.current?.scrollToEnd({ animated: true });
+    
+    }}   >
       
 
       

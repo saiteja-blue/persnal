@@ -7,6 +7,8 @@ import axios from 'axios';
 import { token } from '../constants/constant';
 
 import Ioniconss from '@expo/vector-icons/Ionicons';
+import * as FileSystem from 'expo-file-system';
+
 
 
 const formatFileSize = (sizeInBytes) => {
@@ -80,56 +82,66 @@ const ImagePickerWithTextInput = ({media,results,setMedia,setShowDropdown,setRes
     }
   };
 
-  const handleSendMessage=async()=>{
+  const handleSendMessage = async () => {
     if (!results.canceled) {
-        const fileUri = results?.assets[0]?.uri;
-        // setShowDropdown(false)
-        console.log("hello")
+      const fileUri = results?.assets[0]?.uri;
+  
+      console.log(fileUri, "fileUrifileUrifileUri");
+  
+      try {
+        // Read the file
+        const fileInfo = await FileSystem.getInfoAsync(fileUri);
+        if (!fileInfo.exists) {
+          console.error('File does not exist:', fileUri);
+          return;
+        }
+  
         const data = {
           message: `${text}`,
-          file_type:media=="image"? 'img': media=="document"? "pdf":null,
+          file_type: media == "image" ? 'img' : media == "document" ? "pdf" : null,
           beneficiary_number: '919133150872',
           beneficiary_id: "beneficiary|27e74ec8-f3a9-4d67-9b36-25fedc76bf50",
           encounter_id: 'all',
-          header_media_type:media=="image"?"image": media=="document"? "document":null
+          header_media_type: media == "image" ? "image" : media == "document" ? "document" : null,
         };
-    
-    
-        const response = await fetch(fileUri);
-        const blob = await response.blob();
-        const file = new File([blob], results?.assets[0].name || 'selected-image', { type: blob.type });
-    
-        console.log(response,file)
+  
+        const file = {
+          uri: fileInfo.uri,
+          name: results?.assets[0]?.name || 'selected-file',
+          type: media == "image" ? 'image/jpeg' : 'application/pdf', // Adjust based on the file type
+        };
+  
+        
+  
         const formData = new FormData();
-        formData.append('file', file); 
+        formData.append('file', file);
         formData.append('file_type', data.file_type);
-        formData.append('beneficiary_number',data.beneficiary_number)
-        formData.append('encounter_id',data.encounter_id)
-        formData.append('beneficiary_id',data.beneficiary_id)
-        formData.append('header_media_type',data.header_media_type)
-       
-        formData.append('message',data.message)
-    
-    
-    
-        try {
-          // Send FormData to the backend with Axios
-          const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL_LOCALHOST}/wa-engage/send_app_message`, formData, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          setMedia(false)
-          setShowDropdown(false)
-          console.log('Upload successful:', response.data);
-        } catch (error) {
-          console.error('Error uploading image:', error);
-          setMedia(false)
-          setShowDropdown(false)
-        }
+        formData.append('beneficiary_number', data.beneficiary_number);
+        formData.append('encounter_id', data.encounter_id);
+        formData.append('beneficiary_id', data.beneficiary_id);
+        formData.append('header_media_type', data.header_media_type);
+        formData.append('message', data.message);
+  
+        // Send FormData to the backend
+        const response = await axios.post(`${process.env.EXPO_PUBLIC_API_URL_LOCALHOST}/wa-engage/send_app_message`, formData, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+            'ngrok-skip-browser-warning': 'skip-browser-warning',
+            'Accept': 'application/json, text/plain, */*'
+          },
+        });
+  
+        setMedia(false);
+        setShowDropdown(false);
+        console.log('Upload successful:', response.data);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setMedia(false);
+        setShowDropdown(false);
       }
-  }
+    }
+  };
 
   const handleClose=()=>{
     setMedia('')
@@ -176,7 +188,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 15,
+    top: 35,
     left: 15,
     zIndex: 1, // Ensure it's above other elements
   },
